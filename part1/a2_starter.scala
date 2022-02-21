@@ -32,9 +32,11 @@ df.explain(true)  // explain the query plan in detail:
 
 // Example 2
 df = spark.sql("""
-    SELECT *
+SELECT t1 + 1 as t2
+FROM (
+    SELECT temp + 1 as t1
     FROM Cities
-    WHERE temp < 5 OR true
+)
 """)
 df.show()
 df.explain(true)

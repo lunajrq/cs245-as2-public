@@ -128,10 +128,10 @@ WHERE coastline = "yes"
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{country, EU}(\sigma_{coastline=yes}(Countries))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\pi_{country, EU}(\sigma_{coastline=yes}(Countries))$
 
 \subsection*{Explanation}
 
@@ -148,10 +148,10 @@ WHERE temp < 4
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{city}(\sigma_{temp<4}(\pi_{city, temp}(Cities)))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\pi_{city}(\sigma_{temp<4}(Cities))$
 
 \subsection*{Explanation}
 
@@ -167,10 +167,10 @@ WHERE Cities.country = Countries.country
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{city, country, latitude, longitude, temp, country, pop, EU, coastline}(\sigma_{temp<4 \land pop>6}(Cities \Join Countries))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\sigma_{temp<4}(Cities) \Join \sigma_{pop>6}(Countries)$
 
 \subsection*{Explanation}
 
@@ -185,10 +185,10 @@ WHERE Cities.country = Countries.country
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{city, pop}(\sigma_{pop>6}(Cities \Join Countries))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\pi_{city, pop}(\pi_{city,country}(Cities) \Join \pi_{country, pop}(\sigma_{pop>6}(Countries)))$
 
 \subsection*{Explanation}
 
@@ -202,10 +202,10 @@ WHERE country LIKE "%e%d"
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{country, pop, EU, coastline}(\sigma_{country\ \mathrm{LIKE}\ '\%e\%d'}(Countries))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\sigma_{country\ \mathrm{LIKE}\ '\%e\%d'}(Countries)$
 
 \subsection*{Explanation}
 
@@ -219,10 +219,10 @@ WHERE country LIKE "%ia"
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{country, pop, EU, coastline}(\sigma_{country\ \mathrm{LIKE}\ '\%ia'}(Countries))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\sigma_{EndsWith(country, 'ia')}(Countries)$
 
 \subsection*{Explanation}
 
@@ -238,10 +238,10 @@ FROM (
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{t1 + 1 \to t2}(\pi_{temp + 1 \to t1}(Cities))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\pi_{temp + 2 \to t2}(Cities)$
 
 \subsection*{Explanation}
 
@@ -257,11 +257,14 @@ FROM (
 \end{verbatim}
 
 \subsection*{Analyzed Logical Plan}
-\vspace{2in}
+$\pi_{t1 + 1.0 \to t2}(\pi_{temp + 1.0 \to t1}(Cities))$
 
 \subsection*{Optimized Logical Plan}
-\vspace{2in}
+$\pi_{(temp + 1.0) + 1.0 \to t2}(Cities)$
 
 \subsection*{Explanation}
+The optimized logical plan is different from the original plan since two sub-sequence project can be combined.
 
+The reason why it's different from Problem 7 is that we are doing floating point addition in problem 8. There's some potential precision issue if we try to optimize $$temp + 1.0 + 1.0$$ to $$temp + 2.0$$
+2251799679467520
 \end{document}
